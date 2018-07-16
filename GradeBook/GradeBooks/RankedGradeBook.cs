@@ -31,7 +31,7 @@ namespace GradeBook.GradeBooks
             else if(rankedGrades[(threshold * 4) - 1] <= averageGrade)
                 return 'D';
             else
-                return 'f';
+                return 'F'; 
         }
     }
 }
