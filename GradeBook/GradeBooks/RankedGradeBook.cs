@@ -22,7 +22,7 @@ namespace GradeBook.GradeBooks
 
             var rankedGrades = Students.OrderByDescending(e => e.AverageGrade).Select(e => e.AverageGrade).ToList();
 
-            if(rankedGrades[threshold - 1] < averageGrade)
+            if(rankedGrades[threshold - 1] <= averageGrade)
                 return 'A';
             else if (rankedGrades[(threshold * 2) - 1] <= averageGrade)
                 return 'B';
