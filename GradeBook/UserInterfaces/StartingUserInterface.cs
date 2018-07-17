@@ -34,12 +34,17 @@ namespace GradeBook.UserInterfaces
         public static void CreateCommand(string command)
         {
             var parts = command.Split(' ');
-            if (parts.Length != 3)
+            if (parts.Length != 4)
             {
-                Console.WriteLine("Command not valid, Create requires a name and type of gradebook.");
+                Console.WriteLine("Command not valid, Create requires a name, type of gradebook, if it's weighted (true / false).");
                 return;
             }
-           var name = parts[1];
+            var name = parts[1];
+            if(Boolean.TryParse(parts[3], out bool isWeighted) == false) 
+            {
+                Console.WriteLine(parts[3] + " Command not valid, Create requires a name, type of gradebook, if it's weighted (true / false).");
+                return;
+            }
 
            bool success = Enum.TryParse<GradeBookType>(parts[2], true, out var type);
             if (success == false)
@@ -48,19 +53,19 @@ namespace GradeBook.UserInterfaces
                 return;
             }  
 
-            BaseGradeBook gradeBook = InstantiateGradeBook(type, name);
+            BaseGradeBook gradeBook = InstantiateGradeBook(type, name, isWeighted);
             Console.WriteLine("Created gradebook {0}.", name);
             GradeBookUserInterface.CommandLoop(gradeBook);
         }
 
-        public static BaseGradeBook InstantiateGradeBook(GradeBookType type, string name)
+        public static BaseGradeBook InstantiateGradeBook(GradeBookType type, string name, bool isWeighted)
         {
             switch (type)
             {
                 case GradeBookType.Standard:
-                    return new StandardGradeBook(name) { Type = type };
+                    return new StandardGradeBook(name, isWeighted) { Type = type };
                 case GradeBookType.Ranked:
-                    return new RankedGradeBook(name) { Type = type };
+                    return new RankedGradeBook(name, isWeighted) { Type = type };
                 default:
                     throw new InvalidOperationException(type.ToString() + " is not a supported type of gradebook, please try again");
             }
