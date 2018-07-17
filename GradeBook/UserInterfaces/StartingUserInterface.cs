@@ -39,8 +39,14 @@ namespace GradeBook.UserInterfaces
                 Console.WriteLine("Command not valid, Create requires a name and type of gradebook.");
                 return;
             }
-            var name = parts[1];
-            var type = Enum.Parse<GradeBookType>(parts[2]);
+           var name = parts[1];
+
+           bool success = Enum.TryParse<GradeBookType>(parts[2], true, out var type);
+            if (success == false)
+            {
+                Console.WriteLine(parts[2] + " is not a supported type of gradebook, please try again");
+                return;
+            }  
 
             BaseGradeBook gradeBook = InstantiateGradeBook(type, name);
             Console.WriteLine("Created gradebook {0}.", name);
@@ -56,8 +62,7 @@ namespace GradeBook.UserInterfaces
                 case GradeBookType.Ranked:
                     return new RankedGradeBook(name) { Type = type };
                 default:
-                    Console.WriteLine(type.ToString() + " is not a supported type of gradebook, please try again");
-                    return null;
+                    throw new InvalidOperationException(type.ToString() + " is not a supported type of gradebook, please try again");
             }
         }
 
